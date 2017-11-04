@@ -14,6 +14,8 @@ public class SmartTalon extends CANTalon {
 	private PIDGains m_velocityGains;
 	private PIDGains m_distanceGains;
 	
+	private int m_mode;
+	
 	public SmartTalon(int deviceNumber) {
 		super(deviceNumber);
 		
@@ -24,6 +26,10 @@ public class SmartTalon extends CANTalon {
 	{
 		super(deviceNumber);
 		m_inverted = inverted;
+		m_mode = initialMode;
+		
+		m_velocityGains = new PIDGains(0,0,0,0,0,0);
+		m_distanceGains = new PIDGains(0,0,0,0,0,0);
 		
 		if(initialMode == 0)
 			setToVelocity();
@@ -72,9 +78,12 @@ public class SmartTalon extends CANTalon {
 		speed = (speed < -1) ? -1 : speed;
 		
 		speed = (speed > 0) ? speed * m_maxForwardSpeed : speed * m_maxReverseSpeed;
-	
-		setToVelocity();
-		changeControlMode(TalonControlMode.Speed);
+		
+		if(!(m_mode == TalonControlMode.Speed.getValue())) {
+			setToVelocity();
+			changeControlMode(TalonControlMode.Speed);
+			m_mode = TalonControlMode.Speed.getValue();
+		}
 		
 		configMaxOutputVoltage(12);
 		
@@ -86,7 +95,10 @@ public class SmartTalon extends CANTalon {
 	
 	public void goVoltage(double speed)
 	{
-		changeControlMode(TalonControlMode.PercentVbus);
+		if(!(m_mode == TalonControlMode.PercentVbus.getValue())) {
+			changeControlMode(TalonControlMode.PercentVbus);
+			m_mode = TalonControlMode.PercentVbus.getValue();
+		}
 		
 		configMaxOutputVoltage(12);
 		
@@ -103,9 +115,12 @@ public class SmartTalon extends CANTalon {
 		
 		double setPoint = getPosition() + distance;
 		
-		setToDistance();
-		changeControlMode(TalonControlMode.Position);
-		
+		if(!(m_mode == TalonControlMode.Position.getValue())) {
+			setToDistance();
+			changeControlMode(TalonControlMode.Position);
+			m_mode = TalonControlMode.Position.getValue();
+		}
+			
 		
 		configMaxOutputVoltage(12 * speed);
 		
@@ -143,6 +158,14 @@ public class SmartTalon extends CANTalon {
 
 	public boolean isM_inverted() {
 		return m_inverted;
+	}
+
+	public int getM_mode() {
+		return m_mode;
+	}
+
+	public void setM_mode(int m_mode) {
+		this.m_mode = m_mode;
 	}
 	
 	
