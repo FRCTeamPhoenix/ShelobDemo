@@ -37,24 +37,24 @@ public class Robot extends SampleRobot {
 	public void operatorControl()
 	{
 		while(isEnabled()) {
-			m_leftTalon1.set(ControlMode.PercentOutput, -m_stick.getY());
-			m_leftTalon2.set(ControlMode.PercentOutput, -m_stick.getY());
+			m_leftTalon1.set(ControlMode.PercentOutput, -m_stick.getRawAxis(1));
+			m_leftTalon2.set(ControlMode.PercentOutput, -m_stick.getRawAxis(1));
 			
-			m_rightTalon1.set(ControlMode.PercentOutput, m_stick.getZ());
-			m_rightTalon2.set(ControlMode.PercentOutput, m_stick.getZ());
+			m_rightTalon1.set(ControlMode.PercentOutput, m_stick.getRawAxis(5));
+			m_rightTalon2.set(ControlMode.PercentOutput, m_stick.getRawAxis(5));
 			
 			if(m_stick.getRawButton(1)) {
-				m_flyWheelL.set(ControlMode.PercentOutput, (m_stick.getRawAxis(4) + 1) / 2.0);
-				m_flyWheelR.set(ControlMode.PercentOutput, (m_stick.getRawAxis(4) + 1) / 2.0);
+				m_flyWheelL.set(ControlMode.PercentOutput, (m_stick.getRawAxis(4) + 1) / 1.0);
+				m_flyWheelR.set(ControlMode.PercentOutput, -(m_stick.getRawAxis(4) + 1) / 1.0);
 			} else {
 				m_flyWheelL.set(ControlMode.PercentOutput, 0);
 				m_flyWheelR.set(ControlMode.PercentOutput, 0);
 			}
 			
 			if(m_stick.getRawButton(2)) 
-				m_rollers.set(ControlMode.PercentOutput, 0.5);
-			else if(m_stick.getRawButton(7))
 				m_rollers.set(ControlMode.PercentOutput, -0.5);
+			else if(m_stick.getRawButton(7))
+				m_rollers.set(ControlMode.PercentOutput, 0.5);
 			else
 				m_rollers.set(ControlMode.PercentOutput, 0);
 		}
