@@ -1,60 +1,61 @@
-package org.usfirst.frc.team2342.robot;
+package frc.robot;
 
-import org.usfirst.frc.team2342.robot.talons.SmartTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
 
 public class Robot extends SampleRobot {
 
-	SmartTalon m_leftTalon1;
-	SmartTalon m_rightTalon1;
-	SmartTalon m_leftTalon2;
-	SmartTalon m_rightTalon2;
+	WPI_TalonSRX m_leftTalon1;
+	WPI_TalonSRX m_rightTalon1;
+	WPI_TalonSRX m_leftTalon2;
+	WPI_TalonSRX m_rightTalon2;
 	
-	SmartTalon m_flyWheelL;
-	SmartTalon m_flyWheelR;
+	WPI_TalonSRX m_flyWheelL;
+	WPI_TalonSRX m_flyWheelR;
 	
-	SmartTalon m_rollers;
+	WPI_TalonSRX m_rollers;
 	
 	Joystick m_stick = new Joystick(0);
 	
 	public void robotInit()
 	{
-		m_leftTalon1 = new SmartTalon(2, false, 0);
-		m_leftTalon2 = new SmartTalon(4, false, 0);
-		m_rightTalon1 = new SmartTalon(1, false, 0);
-		m_rightTalon2 = new SmartTalon(3, false, 0);
+		m_leftTalon1 = new WPI_TalonSRX(2);
+		m_leftTalon2 = new WPI_TalonSRX(4);
+		m_rightTalon1 = new WPI_TalonSRX(1);
+		m_rightTalon2 = new WPI_TalonSRX(3);
 		
-		m_flyWheelL = new SmartTalon(5, false, 0);
-		m_flyWheelR = new SmartTalon(6, true, 0);
+		m_flyWheelL = new WPI_TalonSRX(5);
+		m_flyWheelR = new WPI_TalonSRX(6);
 		
-		m_rollers = new SmartTalon(8, true, 0);
+		m_rollers = new WPI_TalonSRX(8);
 	}
 	
 	public void operatorControl()
 	{
 		while(isEnabled()) {
-			m_leftTalon1.goVoltage(-m_stick.getY());
-			m_leftTalon2.goVoltage(-m_stick.getY());
+			m_leftTalon1.set(ControlMode.PercentOutput, -0.5 * m_stick.getRawAxis(1));
+			m_leftTalon2.set(ControlMode.PercentOutput, -0.5 * m_stick.getRawAxis(1));
 			
-			m_rightTalon1.goVoltage(m_stick.getZ());
-			m_rightTalon2.goVoltage(m_stick.getZ());
+			m_rightTalon1.set(ControlMode.PercentOutput, m_stick.getRawAxis(3));
+			m_rightTalon2.set(ControlMode.PercentOutput, m_stick.getRawAxis(3));
 			
 			if(m_stick.getRawButton(1)) {
-				m_flyWheelL.goVoltage((m_stick.getRawAxis(4) + 1) / 2.0);
-				m_flyWheelR.goVoltage((m_stick.getRawAxis(4) + 1) / 2.0);
+				m_flyWheelL.set(ControlMode.PercentOutput, 0.75);
+				m_flyWheelR.set(ControlMode.PercentOutput, -0.75);
 			} else {
-				m_flyWheelL.goVoltage(0);
-				m_flyWheelR.goVoltage(0);
+				m_flyWheelL.set(ControlMode.PercentOutput, 0);
+				m_flyWheelR.set(ControlMode.PercentOutput, 0);
 			}
 			
-			if(m_stick.getRawButton(2)) 
-				m_rollers.goVoltage(0.5);
+			if(m_stick.getRawButton(8)) 
+				m_rollers.set(ControlMode.PercentOutput, -0.5);
 			else if(m_stick.getRawButton(7))
-				m_rollers.goVoltage(-0.5);
+				m_rollers.set(ControlMode.PercentOutput, 0.5);
 			else
-				m_rollers.goVoltage(0);
+				m_rollers.set(ControlMode.PercentOutput, 0);
 		}
 	}
 	
